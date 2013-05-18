@@ -2,9 +2,9 @@
 /**
  * This file is part of Handlebars-php
  * Base on mustache-php https://github.com/bobthecow/mustache.php
- * 
+ *
  * PHP version 5.3
- * 
+ *
  * @category  Xamin
  * @package   Handlebars
  * @author    fzerorubigd <fzerorubigd@gmail.com>
@@ -15,12 +15,12 @@
  */
 
 /**
- * Handlebars helpers 
+ * Handlebars helpers
  *
- * a collection of helper function. normally a function like 
+ * a collection of helper function. normally a function like
  * function ($sender, $name, $arguments) $arguments is unscaped arguments and is a string, not array
  * TODO: Add support for an interface with an execute method
- * 
+ *
  * @category  Xamin
  * @package   Handlebars
  * @author    fzerorubigd <fzerorubigd@gmail.com>
@@ -49,29 +49,31 @@ class Handlebars_Helpers
     {
         if ($defaults) {
             $this->addDefaultHelpers();
-        }            
+        }
         if ($helpers != null) {
             if (!is_array($helpers) && !$helpers instanceof Traversable) {
                 throw new InvalidArgumentException('HelperCollection constructor expects an array of helpers');
-            }                
-            foreach ($helpers as $name => $helper) {
-                $this->add($name, $helpers);
             }
-        }            
+            foreach ($helpers as $name => $helper) {
+                $this->add($name, $helper);
+            }
+        }
     }
     /**
      * Add default helpers (if unless each with)
-     * 
+     *
      * @return void
      */
     protected function addDefaultHelpers()
     {
         $this->add(
-            'if', 
+            'if',
             function ($template, $context, $args, $source) {
                 $tmp = $context->get($args);
+
+
                 $buffer = '';
-                
+
                 if ($tmp) {
                     $template->setStopToken('else');
                     $buffer = $template->render($context);
@@ -88,9 +90,22 @@ class Handlebars_Helpers
         );
 
         $this->add(
-            'each', 
+            'each',
             function ($template, $context, $args, $source) {
+                $vars = array();
+                if (strpos(trim($args), ' ') !== false) {
+                    $parts = explode(' ', trim($args));
+                    $args = array_shift($parts);
+                    $vars = json_decode(trim(implode(" ", $parts)), true);
+                }
                 $tmp = $context->get($args);
+                // if (is_array($vars)) {
+                //     foreach ($vars as $n => $v) {
+                //         $tmp[$n] = $v;
+                //     }
+                // }
+
+
                 $buffer = '';
                 if (is_array($tmp) || $tmp instanceof Traversable) {
                     foreach ($tmp as $var) {
@@ -98,25 +113,25 @@ class Handlebars_Helpers
                         $buffer .= $template->render($context);
                         $context->pop();
                     }
-                }            
+                }
                 return $buffer;
             }
-        ); 
+        );
 
         $this->add(
-            'unless', 
+            'unless',
             function ($template, $context, $args, $source) {
                 $tmp = $context->get($args);
                 $buffer = '';
                 if (!$tmp) {
                     $buffer = $template->render($context);
-                }            
+                }
                 return $buffer;
             }
-        ); 
+        );
 
         $this->add(
-            'with', 
+            'with',
             function ($template, $context, $args, $source) {
                 $tmp = $context->get($args);
                 $context->push($tmp);
@@ -124,8 +139,25 @@ class Handlebars_Helpers
                 $context->pop();
                 return $buffer;
             }
-        );       
-        
+        );
+
+        $this->add(
+            'bind',
+            function ($template, $context, $args, $source) {
+                $vars = array();
+                if (substr(trim($args), 0, 1) == '{') {
+                    $vars = json_decode(trim($args), true);
+                }
+                else {
+                    $parts = explode(' ', trim($args));
+                    $name = array_shift($parts);
+                    $val = trim(implode(" ", $parts));
+                    $vars = array($name => $val);
+                }
+                $context->merge($vars);
+            }
+        );
+
         //Just for compatibility with ember
         $this->add(
             'bindAttr',
@@ -136,25 +168,25 @@ class Handlebars_Helpers
     }
 
     /**
-     * Add a new helper to helpers 
-     * 
+     * Add a new helper to helpers
+     *
      * @param string   $name   helper name
      * @param callable $helper a function as a helper
      *
      * @return void
      * @throw InvalidArgumentException if $helper is not a callable
      */
-    public function add($name ,$helper) 
+    public function add($name ,$helper)
     {
         if (!is_callable($helper)) {
             throw new InvalidArgumentException("$name Helper is not a callable.");
-        }            
+        }
         $this->helpers[$name] = $helper;
     }
-    
+
     /**
      * Check if $name helper is available
-     * 
+     *
      * @param string $name helper name
      *
      * @return boolean
@@ -165,8 +197,8 @@ class Handlebars_Helpers
     }
 
     /**
-     * Get a helper. __magic__ method :) 
-     * 
+     * Get a helper. __magic__ method :)
+     *
      * @param string $name helper name
      *
      * @return callable helper function
@@ -176,13 +208,13 @@ class Handlebars_Helpers
     {
         if (!$this->has($name)) {
             throw new InvalidArgumentException('Unknow helper :' . $name);
-        }            
+        }
         return $this->helpers[$name];
     }
 
     /**
-     * Check if $name helper is available __magic__ method :) 
-     * 
+     * Check if $name helper is available __magic__ method :)
+     *
      * @param string $name helper name
      *
      * @return boolean
@@ -194,8 +226,8 @@ class Handlebars_Helpers
     }
 
     /**
-     * Add a new helper to helpers __magic__ method :) 
-     * 
+     * Add a new helper to helpers __magic__ method :)
+     *
      * @param string   $name   helper name
      * @param callable $helper a function as a helper
      *
@@ -205,15 +237,15 @@ class Handlebars_Helpers
     public function __set($name ,$helper)
     {
         $this->add($name, $helpers);
-    }        
+    }
 
 
     /**
      * Unset a helper
-     * 
+     *
      * @param string $name helpername to remove
      *
-     * @return void 
+     * @return void
      */
     public function __unset($name)
     {
@@ -258,5 +290,5 @@ class Handlebars_Helpers
     {
         return empty($this->helpers);
     }
-    
-}    
+
+}
