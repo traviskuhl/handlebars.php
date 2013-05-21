@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.8.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+  <name>Handlebars</name>
+  <channel>pear.bolthq.com</channel>
+  <summary>Handlebars.php</summary>
+  <description>Handlebars.php</description>
+  <lead>
+    <name>Travis Kuhl</name>
+    <user>traviskuhl</user>
+    <email>travis@kuhl.co</email>
+    <active>yes</active>
+  </lead>
+  <contributor>
+    <name>fzerorubigd</name>
+    <user>fzerorubigd</user>
+    <email>fzerorubigd@gmail.com</email>
+    <active>no</active>
+  </contributor>  
+  <date>2013-05-21</date>
+  <time>12:00:00</time>
+  <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+  </version>
+  <stability>
+    <release>stable</release>
+    <api>stable</api>
+  </stability>
+  <license uri="http://opensource.org/licenses/Apache-2.0">Apache 2.0</license>
+  <notes>-</notes>
+  <contents>
+    <dir name="/">
+      <dir name="src/Handlebars" baseinstalldir="/">
+        <file name="Autoloader.php" role="php" />
+        <file name="Cache.php" role="php" />
+        <file name="Context.php" role="php" />
+        <file name="Engine.php" role="php" />
+        <file name="Helpers.php" role="php" />
+        <file name="Loader.php" role="php" />
+        <file name="Parser.php" role="php" />
+        <file name="Template.php" role="php" />
+        <file name="Tokenizer.php" role="php" />
+        <dir name="Cache">
+          <file name="APC.php" role="php" />
+          <file name="Dummy.php" role="php" />
+        </dir>
+        <dir name="Loader">
+          <file name="FilesystemLoader.php" role="php" />
+          <file name="StringLoader.php" role="php" />
+        </dir>
+      </dir>
+    </dir>
+  </contents>
+  <dependencies>
+    <required>
+      <php>
+        <min>5.3.8</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.0</min>
+      </pearinstaller>    
+    </required>
+  </dependencies>
+  <phprelease />
+</package>
