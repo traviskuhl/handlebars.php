@@ -165,8 +165,7 @@ class Handlebars_Context
             }
         }
 
-
-        if (is_object($current) AND is_a($current, '\bolt\bucket\bString')) {
+        if (is_object($current) AND ($implements = class_implements($current)) !== false AND in_array('bolt\iBucket', $implements)) {
             $current = (string)$current->value;
         }
 
