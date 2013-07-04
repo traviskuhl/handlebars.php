@@ -104,8 +104,6 @@ class Handlebars_Helpers
                 //         $tmp[$n] = $v;
                 //     }
                 // }
-
-
                 $buffer = '';
                 if (is_array($tmp) || $tmp instanceof Traversable) {
                     foreach ($tmp as $var) {
